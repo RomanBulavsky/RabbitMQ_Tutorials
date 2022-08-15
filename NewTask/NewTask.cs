@@ -17,12 +17,15 @@ class NewTask
                                      exclusive: false,
                                      autoDelete: false,
                                      arguments: null);
-
+                System.Console.WriteLine("Pls write down the message:");
                 var message = System.Console.ReadLine();
                 System.Console.WriteLine($"get message{message}");
                 var body = Encoding.UTF8.GetBytes(message);
 
                 var properties = channel.CreateBasicProperties();
+                // Marking messages as persistent doesn't fully guarantee that a message won't be lost.
+                // Although it tells RabbitMQ to save the message to disk, there is still a short time
+                // window when RabbitMQ has accepted a message and hasn't saved it yet. 
                 properties.Persistent = true;
 
                 channel.BasicPublish(exchange: "",
@@ -32,10 +35,5 @@ class NewTask
                 Console.WriteLine(" [x] Sent {0}", message);
             }
         }
-    }
-
-    private static string GetMessage(string args)
-    {
-        return ((args.Length > 0) ? string.Join(" ", args) : "Hello World!");
     }
 }

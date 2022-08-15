@@ -34,6 +34,7 @@ class Worker
                 if (new Random().Next(10) > 5)
                 {
                     Console.WriteLine(" [x] Error");
+                    System.Console.ReadLine();
                     channel.BasicNack(deliveryTag: ea.DeliveryTag, multiple: false, requeue: true);
                     return;
                 }
@@ -48,7 +49,7 @@ class Worker
             channel.BasicConsume(queue: "task_queue",
                                  autoAck: false,
                                  consumer: consumer);
-            Console.ReadLine();
+            while(Console.ReadLine() != "exit");
         }
     }
 }
